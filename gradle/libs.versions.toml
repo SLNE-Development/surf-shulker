@@ -1,9 +1,28 @@
 [versions]
 docker = "3.7.0"
+grpc-core = "1.77.0"
+grpc-kotlin = "1.5.0"
+protobuf-plugin = "0.9.5"
+protobuf-kotlin = "4.33.1"
 
 [libraries]
 docker-core = { module = "com.github.docker-java:docker-java-core", version.ref = "docker" }
 docker-transport-okhttp = { module = "com.github.docker-java:docker-java-transport-okhttp", version.ref = "docker" }
+
+# grpc + protobuf
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc-core" }
+grpc-okhttp = { module = "io.grpc:grpc-okhttp", version.ref = "grpc-core" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc-core" }
+grpc-kotlin-stub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpc-kotlin" }
+
+protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf-kotlin" }
+protobuf-gradle = { module = "com.google.protobuf:protobuf-gradle-plugin", version.ref = "protobuf-plugin" }
+protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin" }
+protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version.ref = "protobuf-kotlin" }
+protoc-gen-grpc-java = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc-core" }
+protoc-gen-grpc-kotlin = { module = "io.grpc:protoc-gen-grpc-kotlin", version.ref = "grpc-kotlin" }
+
+[plugins]
 
 [bundles]
 docker = ["docker-core", "docker-transport-okhttp"]
