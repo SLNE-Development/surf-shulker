@@ -1,0 +1,9 @@
+[versions]
+docker = "3.7.0"
+
+[libraries]
+docker-core = { module = "com.github.docker-java:docker-java-core", version.ref = "docker" }
+docker-transport-okhttp = { module = "com.github.docker-java:docker-java-transport-okhttp", version.ref = "docker" }
+
+[bundles]
+docker = ["docker-core", "docker-transport-okhttp"]
