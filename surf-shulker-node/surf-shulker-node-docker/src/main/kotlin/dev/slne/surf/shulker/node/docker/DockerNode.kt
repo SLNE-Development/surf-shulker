@@ -15,6 +15,8 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.annotations.Unmodifiable
 import java.util.*
 
+const val SHULKER_NETWORK_NAME = "shulker-network"
+
 fun main(): Unit = runBlocking {
     val node = DockerNode(
         DockerConfig(
@@ -25,6 +27,7 @@ fun main(): Unit = runBlocking {
         )
     )
 
+    node.connect()
     node.findRegisteredContainers()
 
     node.containers.forEach { container ->
@@ -43,6 +46,8 @@ class DockerNode(
         get() = _containers.toList()
 
     override val dockerHost: String = config.host
+    lateinit var networkId: String
+        private set
 
     private val clientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
         .apply {
@@ -72,6 +77,22 @@ class DockerNode(
     private val dockerClient = DockerClientImpl.getInstance(clientConfig, httpClient)
 
     override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
+        dockerClient.listNetworksCmd()
+            .withNameFilter(SHULKER_NETWORK_NAME)
+            .exec()
+            .firstOrNull()
+            ?.let { existingNetwork ->
+                networkId = existingNetwork.id
+                return@withContext true
+            }
+
+        val result = dockerClient.createNetworkCmd()
+            .withDriver("bridge")
+            .withName(SHULKER_NETWORK_NAME)
+            .exec()
+
+        networkId = result.id
+
         true
     }
 
@@ -82,14 +103,19 @@ class DockerNode(
     override suspend fun createContainer(
         uuid: UUID,
         port: Int,
-        persistentVolumes: Boolean,
+        persistentVolume: Boolean,
         memoryLimit: Long?,
         cpuLimit: Double?,
         cpuPinning: List<Int>
     ): Container = DockerContainer(
+        node = this,
         dockerClient = dockerClient,
         uuid = uuid,
         port = port,
+        persistentVolumes = persistentVolume,
+        memoryLimit = memoryLimit,
+        cpuLimit = cpuLimit,
+        cpuPinning = cpuPinning
     )
 
     override suspend fun createVolume(name: String): Boolean = withContext(Dispatchers.IO) {
@@ -101,7 +127,9 @@ class DockerNode(
     }
 
     override suspend fun findRegisteredContainers() {
-        val dockerContainers = dockerClient.listContainersCmd().exec()
+        val dockerContainers = dockerClient.listContainersCmd()
+            .withShowAll(true)
+            .exec()
 
         dockerContainers.forEach { raw ->
             println(
@@ -113,8 +141,12 @@ class DockerNode(
             )
         }
 
-        _containers.addAll(dockerContainers.map {
-            DockerContainer.containerFromDockerContainer(dockerClient, it)
+        _containers.addAll(dockerContainers.map { container ->
+            DockerContainer.containerFromDockerContainer(
+                node = this,
+                dockerClient = dockerClient,
+                container = container
+            )
         }.toList())
     }
 

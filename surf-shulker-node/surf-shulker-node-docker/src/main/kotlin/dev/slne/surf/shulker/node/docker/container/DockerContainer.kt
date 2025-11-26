@@ -1,23 +1,21 @@
 package dev.slne.surf.shulker.node.docker.container
 
 import com.github.dockerjava.api.DockerClient
-import com.github.dockerjava.api.model.ExposedPort
-import com.github.dockerjava.api.model.HostConfig
-import com.github.dockerjava.api.model.PortBinding
-import com.github.dockerjava.api.model.Ports
+import com.github.dockerjava.api.model.*
 import dev.slne.surf.shulker.node.common.container.Container
+import dev.slne.surf.shulker.node.docker.DockerNode
+import dev.slne.surf.shulker.node.docker.utils.DockerLabel
+import dev.slne.surf.shulker.node.docker.utils.SurfLabel
+import dev.slne.surf.shulker.node.docker.utils.pullImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 
+//private const val BASE_IMAGE = "eclipse-temurin:24-jre-alpine"
 private const val BASE_IMAGE = "ubuntu:24.04"
 
-const val SHULKER_DOCKER_CONTAINER_LABEL_UUID = "surf.shulker.node.container.uuid"
-const val SHULKER_DOCKER_CONTAINER_LABEL_PERSISTENT_VOLUMES =
-    "surf.shulker.node.container.persistentVolumes"
-const val SHULKER_DOCKER_CONTAINER_LABEL_PORT = "surf.shulker.node.container.port"
-
 class DockerContainer(
+    private val node: DockerNode,
     private val dockerClient: DockerClient,
     override val uuid: UUID,
     override val port: Int,
@@ -25,6 +23,7 @@ class DockerContainer(
     override val cpuLimit: Double? = null,
     override val cpuPinning: List<Int> = emptyList(),
     override val persistentVolumes: Boolean = false,
+    containerId: String? = null
 ) : Container {
     private val bindingPort = Ports.Binding.bindPort(port)
     private val exposedPort = ExposedPort.tcp(port)
@@ -34,12 +33,28 @@ class DockerContainer(
 
     private lateinit var containerId: String
 
-    private lateinit var persistentVolumeId: String
-    private lateinit var runtimeVolumeId: String
+    private val persistentVolumeId: String = "${uuid}_persistent"
+    private val runtimeVolumeId: String = "${uuid}_runtime"
+
+    private val persistentVolume = Bind(persistentVolumeId, Volume("/data/persistent"))
+    private val runtimeVolume = Bind(runtimeVolumeId, Volume("/data/runtime"))
+    private val binds = if (persistentVolumes) {
+        listOf(persistentVolume, runtimeVolume)
+    } else {
+        listOf(runtimeVolume)
+    }
+
+    init {
+        if (containerId != null) {
+            this.containerId = containerId
+        }
+    }
 
     private val hostConfig = HostConfig().apply {
         withPortBindings(portBinding)
         withMemory(memoryLimit)
+        withOomKillDisable(false)
+        withBinds(this@DockerContainer.binds)
 
         if (cpuPinning.isNotEmpty()) {
             val cpuSet = cpuPinning.joinToString(separator = ",")
@@ -52,22 +67,45 @@ class DockerContainer(
         }
     }
 
-    private val labels = mapOf(
-        SHULKER_DOCKER_CONTAINER_LABEL_UUID to uuid.toString(),
-        SHULKER_DOCKER_CONTAINER_LABEL_PERSISTENT_VOLUMES to persistentVolumes.toString(),
-        SHULKER_DOCKER_CONTAINER_LABEL_PORT to port.toString()
-    )
+    private fun createVolumes() {
+        if (persistentVolumes) {
+            dockerClient.createVolumeCmd()
+                .withName("${uuid}_persistent")
+                .exec()
+        }
 
-    override suspend fun create() = withContext(Dispatchers.IO) {
+        dockerClient.createVolumeCmd()
+            .withName("${uuid}_runtime")
+            .exec()
+    }
+
+    private fun connectNetwork() {
+        dockerClient.connectToNetworkCmd()
+            .withContainerId(containerId)
+            .withNetworkId(node.networkId)
+            .exec()
+    }
+
+    override suspend fun create(): Unit = withContext(Dispatchers.IO) {
         if (::containerId.isInitialized) error("Container already initialized")
 
-        dockerClient.pullImageCmd(BASE_IMAGE).start().awaitCompletion()
+        dockerClient.pullImage(BASE_IMAGE)
 
-        val result = dockerClient.createContainerCmd(BASE_IMAGE)
+        createVolumes()
+
+        val createCommand = dockerClient.createContainerCmd(BASE_IMAGE)
             .withHostConfig(hostConfig)
             .withName(uuid.toString())
-            .withLabels(labels)
-            .exec()
+            .withLabels(SurfLabel.toMap(this@DockerContainer))
+            .withCmd("tail", "-f", "/dev/null")
+
+        if (persistentVolumes) {
+            createCommand.withVolumes(listOf(persistentVolume.volume, runtimeVolume.volume))
+        } else {
+            createCommand.withVolumes(listOf(runtimeVolume.volume))
+        }
+
+        val result = createCommand.exec()
 
         containerId = result.id
 
@@ -79,76 +117,61 @@ class DockerContainer(
             ?.firstOrNull()
             ?.hostIp ?: "localhost"
 
-        if (persistentVolumes) {
-            persistentVolumeId = dockerClient.createVolumeCmd()
-                .withName("${uuid}_persistent")
-                .exec()
-                .name
-        }
-
-        runtimeVolumeId = dockerClient.createVolumeCmd()
-            .withName("${uuid}_runtime")
-            .exec()
-            .name
+        connectNetwork()
     }
 
-    override suspend fun start() = withContext(Dispatchers.IO) {
+    override suspend fun start(): Unit = withContext(Dispatchers.IO) {
         if (!::containerId.isInitialized) error("Container not initialized")
 
         dockerClient.startContainerCmd(containerId).exec()
-
-        Unit
     }
 
-    override suspend fun stop() = withContext(Dispatchers.IO) {
+    override suspend fun stop(): Unit = withContext(Dispatchers.IO) {
         if (!::containerId.isInitialized) error("Container not initialized")
 
         dockerClient.stopContainerCmd(containerId).exec()
-
-        Unit
     }
 
-    override suspend fun kill() = withContext(Dispatchers.IO) {
+    override suspend fun kill(): Unit = withContext(Dispatchers.IO) {
         if (!::containerId.isInitialized) error("Container not initialized")
 
         dockerClient.killContainerCmd(containerId).exec()
-
-        Unit
     }
 
-    override suspend fun destroy() = withContext(Dispatchers.IO) {
+    override suspend fun destroy(): Unit = withContext(Dispatchers.IO) {
         if (!::containerId.isInitialized) error("Container not initialized")
 
         dockerClient.removeContainerCmd(containerId).exec()
-
-        if (persistentVolumes) {
-            dockerClient.removeVolumeCmd(persistentVolumeId).exec()
-        }
-
         dockerClient.removeVolumeCmd(runtimeVolumeId).exec()
-
-        Unit
     }
 
     companion object {
         fun containerFromDockerContainer(
+            node: DockerNode,
             dockerClient: DockerClient,
             container: com.github.dockerjava.api.model.Container
         ): DockerContainer {
-            val labels = container.labels
+            val labels = SurfLabel.fromDockerContainer(container)
 
-            val uuid = UUID.fromString(labels[SHULKER_DOCKER_CONTAINER_LABEL_UUID])
-            val persistentVolumes =
-                labels[SHULKER_DOCKER_CONTAINER_LABEL_PERSISTENT_VOLUMES]?.toBoolean()
-                    ?: false
-            val port =
-                labels[SHULKER_DOCKER_CONTAINER_LABEL_PORT]?.toInt() ?: error("Port label missing")
+            val uuidLabel = labels[SurfLabel.UUID_LABEL] as? DockerLabel.UuidDockerLabel
+            val portLabel = labels[SurfLabel.PORT_LABEL] as? DockerLabel.IntDockerLabel
+            val persistentVolumesLabel =
+                labels[SurfLabel.PERSISTENT_VOLUMES_LABEL] as? DockerLabel.BooleanDockerLabel
+
+            val uuid = uuidLabel?.value
+                ?: error("Container ${container.id} is missing UUID label")
+            val port = portLabel?.value
+                ?: error("Container ${container.id} is missing port label")
+            val persistentVolumes = persistentVolumesLabel?.value
+                ?: error("Container ${container.id} is missing persistent volumes label")
 
             return DockerContainer(
+                node = node,
                 dockerClient = dockerClient,
                 uuid = uuid,
                 port = port,
                 persistentVolumes = persistentVolumes,
+                containerId = container.id
             )
         }
     }

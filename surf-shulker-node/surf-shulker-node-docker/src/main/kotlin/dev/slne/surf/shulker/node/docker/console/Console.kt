@@ -32,6 +32,8 @@ class Console(
         commands.add(CreateContainerCommand(node))
         commands.add(StartContainerCommand(node))
         commands.add(StopContainerCommand(node))
+        commands.add(KillContainerCommand(node))
+        commands.add(DeleteContainerCommand(node))
     }
 
     fun start() {

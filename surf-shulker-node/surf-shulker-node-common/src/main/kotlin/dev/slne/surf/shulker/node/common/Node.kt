@@ -18,7 +18,7 @@ interface Node {
     suspend fun createContainer(
         uuid: UUID,
         port: Int,
-        persistentVolumes: Boolean = false,
+        persistentVolume: Boolean = false,
         memoryLimit: Long? = null,
         cpuLimit: Double? = null,
         cpuPinning: List<Int> = emptyList()

@@ -13,10 +13,12 @@ class CreateContainerCommand(
 
         val container = node.createContainer(
             uuid = uuid,
-            port = port
+            port = port,
+            persistentVolume = true
         )
 
         container.create()
+        container.start()
 
         println("Container $uuid created on port $port")
         println("Host: ${container.host}")
