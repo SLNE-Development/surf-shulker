@@ -1,8 +1,0 @@
-service ChatService {
-  rpc chat (stream ChatMessage) returns (stream ChatMessage);
-}
-
-message ChatMessage {
-  required string sender = 1;
-  required string text = 2;
-}

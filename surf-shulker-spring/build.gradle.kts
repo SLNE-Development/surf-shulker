@@ -4,5 +4,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":surf-shulker-spring"))
+    api(libs.bundles.spring.api.common)
+    api(libs.bundles.spring.aop)
 }

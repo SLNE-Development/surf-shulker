@@ -1,0 +1,34 @@
+package dev.slne.surf.shulker.spring
+
+import jdk.jfr.Enabled
+import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.context.TypeExcludeFilter
+import org.springframework.cache.annotation.EnableCaching
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
+import org.springframework.scheduling.annotation.EnableAsync
+import org.springframework.scheduling.annotation.EnableScheduling
+import java.lang.annotation.Inherited
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@EnableScheduling
+@EnableAsync
+@EntityScan
+@EnableCaching
+@AutoConfigurationPackage
+@Inherited
+@EnableAutoConfiguration
+@ComponentScan(
+    excludeFilters = [ComponentScan.Filter(
+        type = FilterType.CUSTOM,
+        classes = [TypeExcludeFilter::class]
+    ), ComponentScan.Filter(
+        type = FilterType.CUSTOM,
+        classes = [AutoConfigurationExcludeFilter::class]
+    )]
+)
+annotation class SurfShulkerApplication

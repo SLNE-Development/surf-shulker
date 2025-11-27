@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class ServerStatus(
     val joinable: Boolean,
-    val bypassable: Boolean,
+    val joinableBypassable: Boolean,
 ) {
     OFFLINE(false, false),
     STARTING(false, false),

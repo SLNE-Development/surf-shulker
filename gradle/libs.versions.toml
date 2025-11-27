@@ -4,8 +4,12 @@ grpc-core = "1.77.0"
 grpc-kotlin = "1.5.0"
 protobuf-plugin = "0.9.5"
 protobuf-kotlin = "4.33.1"
+exposed = "0.61.0"
+terminalconsoleappender = "1.3.0"
+jline = "3.30.6"
 
 [libraries]
+# docker
 docker-core = { module = "com.github.docker-java:docker-java-core", version.ref = "docker" }
 docker-transport-okhttp = { module = "com.github.docker-java:docker-java-transport-okhttp", version.ref = "docker" }
 
@@ -14,7 +18,6 @@ grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc-core" }
 grpc-okhttp = { module = "io.grpc:grpc-okhttp", version.ref = "grpc-core" }
 grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc-core" }
 grpc-kotlin-stub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpc-kotlin" }
-
 protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf-kotlin" }
 protobuf-gradle = { module = "com.google.protobuf:protobuf-gradle-plugin", version.ref = "protobuf-plugin" }
 protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin" }
@@ -22,7 +25,33 @@ protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", versio
 protoc-gen-grpc-java = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc-core" }
 protoc-gen-grpc-kotlin = { module = "io.grpc:protoc-gen-grpc-kotlin", version.ref = "grpc-kotlin" }
 
+# spring
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" }
+spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
+spring-boot-starter-redis-reactive = { module = "org.springframework.boot:spring-boot-starter-data-redis-reactive" }
+spring-boot-starter-log4j2 = { module = "org.springframework.boot:spring-boot-starter-log4j2" }
+
+# Aspect + AOP
+spring-aspects = { module = "org.springframework:spring-aspects" }
+spring-aop = { module = "org.springframework:spring-aop" }
+aspectjweaver = { module = "org.aspectj:aspectjweaver" }
+aspectjrt = { module = "org.aspectj:aspectjrt" }
+
+# exposed
+exposed-spring-boot-starter = { module = "io.github.johndoe314:exposed-spring-boot-starter", version.ref = "exposed" }
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client" }
+
+# console
+terminalconsoleappender = { module = "net.minecrell:terminalconsoleappender", version.ref = "terminalconsoleappender" }
+jline = { module = "org.jline:jline", version.ref = "jline" }
+
 [plugins]
+spring-boot = { id = "org.springframework.boot" }
 
 [bundles]
 docker = ["docker-core", "docker-transport-okhttp"]
+spring-api-common = ["spring-boot-starter", "spring-boot-starter-cache"]
+spring-aop = ["spring-aop", "aspectjweaver", "aspectjrt", "spring-aspects"]
+exposed-api-server = ["exposed-spring-boot-starter", "exposed-java-time"]
+console-api = ["terminalconsoleappender", "jline"]
