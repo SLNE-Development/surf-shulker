@@ -1,10 +1,18 @@
 package dev.slne.surf.shulker.controller
 
-import dev.slne.surf.shulker.controller.proto.test.TestServiceGrpcKt
-import dev.slne.surf.shulker.controller.proto.test.message
+import Chat
+import ChatServiceGrpcKt
+import chatMessage
 import io.grpc.Grpc
 import io.grpc.InsecureChannelCredentials
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
+
+val flow = MutableSharedFlow<Chat.ChatMessage>()
 
 fun main() {
     val client = Grpc.newChannelBuilderForAddress(
@@ -13,14 +21,25 @@ fun main() {
         InsecureChannelCredentials.create()
     ).defaultLoadBalancingPolicy("round_robin").build()
 
-    val stub = TestServiceGrpcKt.TestServiceCoroutineStub(client)
-    val request = message {
-        message = "Hello from client!"
+    val stub = ChatServiceGrpcKt.ChatServiceCoroutineStub(client)
+
+    CoroutineScope(Dispatchers.IO).launch {
+        val scanner = Scanner(System.`in`)
+
+        while (true) {
+            print("Enter message: ")
+
+            flow.emit(chatMessage {
+                sender = "Client-${UUID.randomUUID()}"
+                text = scanner.nextLine()
+            })
+        }
     }
 
     runBlocking {
-        val response = stub.shuffleMessage(request)
-        println("Received response from server: ${response.shuffledMessage}")
+        stub.chat(flow).collect { msg ->
+            println(msg)
+        }
 
         client.shutdown()
     }

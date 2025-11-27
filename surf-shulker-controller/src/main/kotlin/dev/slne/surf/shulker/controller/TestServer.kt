@@ -20,9 +20,13 @@ fun main(args: Array<String>) {
             }
         })
         .addService(TestService)
+        .addService(ChatService)
         .build()
 
     server.start()
+
     println("Server started on port ${server.port}")
+
     server.awaitTermination()
+
 }
