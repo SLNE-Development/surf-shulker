@@ -11,7 +11,7 @@ object TestService : TestServiceGrpcKt.TestServiceCoroutineImplBase() {
     }
 
     override suspend fun printMessage(request: Test.Message) = message {
-        println("Server printing message: ${request.message}")
         message = "Server received: ${request.message}"
+        result = Test.SendResult.SUCCESS
     }
 }
