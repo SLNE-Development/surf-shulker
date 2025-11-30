@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
+//    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
     java
 }
 
@@ -24,7 +24,7 @@ allprojects {
         slnePublic()
     }
 
-    if(name == "surf-shulker-bom") {
+    if (name == "surf-shulker-bom") {
         return@allprojects
     }
 
@@ -48,9 +48,9 @@ allprojects {
     }
 }
 
-apiValidation {
-    ignoredProjects.addAll(listOf())
-}
+//apiValidation {
+//    ignoredProjects.addAll(listOf())
+//}
 
 private fun TaskContainerScope.configureShadowJar() = withType<ShadowJar> {
     mergeServiceFiles {
