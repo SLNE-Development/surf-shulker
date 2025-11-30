@@ -22,6 +22,7 @@ allprojects {
 
     repositories {
         slnePublic()
+        gradlePluginPortal()
     }
 
     if (name == "surf-shulker-bom") {

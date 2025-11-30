@@ -7,6 +7,8 @@ protobuf-kotlin = "4.33.1"
 exposed = "0.61.0"
 terminalconsoleappender = "1.3.0"
 jline = "3.30.6"
+maven-impl = "4.0.0-rc-2"
+maven-resolver = "2.0.5"
 
 [libraries]
 # docker
@@ -30,6 +32,7 @@ spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter" 
 spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
 spring-boot-starter-redis-reactive = { module = "org.springframework.boot:spring-boot-starter-data-redis-reactive" }
 spring-boot-starter-log4j2 = { module = "org.springframework.boot:spring-boot-starter-log4j2" }
+spring-instrument = { module = "org.springframework:spring-instrument" }
 
 # Aspect + AOP
 spring-aspects = { module = "org.springframework:spring-aspects" }
@@ -46,6 +49,10 @@ mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client" }
 terminalconsoleappender = { module = "net.minecrell:terminalconsoleappender", version.ref = "terminalconsoleappender" }
 jline = { module = "org.jline:jline", version.ref = "jline" }
 
+# maven
+maven-impl = { module = "org.apache.maven:maven-impl", version.ref = "maven-impl" }
+maven-resolver = { module = "org.apache.maven.resolver:maven-resolver-supplier-mvn4", version.ref = "maven-resolver" }
+
 [plugins]
 spring-boot = { id = "org.springframework.boot" }
 
@@ -55,3 +62,4 @@ spring-api-common = ["spring-boot-starter", "spring-boot-starter-cache"]
 spring-aop = ["spring-aop", "aspectjweaver", "aspectjrt", "spring-aspects"]
 exposed-api-server = ["exposed-spring-boot-starter", "exposed-java-time"]
 console-api = ["terminalconsoleappender", "jline"]
+maven-libraries = ["maven-impl", "maven-resolver"]

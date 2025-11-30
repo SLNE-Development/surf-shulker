@@ -1,7 +1,3 @@
-pluginManagement {
-    includeBuild("build-logic")
-}
-
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
@@ -28,6 +24,11 @@ val map = mapOf(
     "surf-shulker-runtime:surf-shulker-runtime-common" to "surf-shulker-runtime-common",
     "surf-shulker-runtime:surf-shulker-runtime-paper" to "surf-shulker-runtime-paper",
     "surf-shulker-runtime:surf-shulker-runtime-velocity" to "surf-shulker-runtime-velocity",
+
+    // Server
+    "surf-shulker-server:surf-shulker-server" to "surf-shulker-server",
+    "surf-shulker-server:surf-shulker-server-plugin" to "surf-shulker-server-plugin",
+    "surf-shulker-server:surf-shulker-server-launcher" to "surf-shulker-server-launcher",
 
     // Node
     "surf-shulker-node:surf-shulker-node-common" to "surf-shulker-node-common",
