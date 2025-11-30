@@ -40,6 +40,9 @@ allprojects {
         configureJar()
 
         javadoc {
+            // Temp disable this as it seems to not work with proto generated files, investigate later
+            enabled = false
+
             val options = options as StandardJavadocDocletOptions
 
             options.use()
