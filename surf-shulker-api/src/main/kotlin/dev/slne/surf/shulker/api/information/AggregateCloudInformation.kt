@@ -3,10 +3,8 @@ package dev.slne.surf.shulker.api.information
 import dev.slne.surf.shulker.proto.cloudinformation.AggregatedCloudInformationSnapshot
 import dev.slne.surf.shulker.proto.cloudinformation.aggregatedCloudInformationSnapshot
 import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
-@Serializable
 data class AggregateCloudInformation(
     val createdAt: @Contextual OffsetDateTime,
     val avgCpu: Double,

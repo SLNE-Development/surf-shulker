@@ -16,6 +16,6 @@ class AgentEventProvider : SharedEventProvider {
         serviceName: String,
         observer: ServerCallStreamObserver<EventContext>
     ) {
-        val service = Agent.runtime.
+        val service = Agent.runtime.serviceStorage.find
     }
 }

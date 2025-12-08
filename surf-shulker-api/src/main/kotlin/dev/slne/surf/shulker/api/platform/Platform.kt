@@ -4,9 +4,7 @@ import dev.slne.surf.shulker.proto.group.GroupType
 import dev.slne.surf.shulker.proto.platform.PlatformSnapshot
 import dev.slne.surf.shulker.proto.platform.platformSnapshot
 import dev.slne.surf.surfapi.core.api.util.mutableObjectListOf
-import kotlinx.serialization.Serializable
 
-@Serializable
 open class Platform(
     val name: String,
     val type: GroupType,
@@ -41,7 +39,7 @@ open class Platform(
     override fun toString(): String {
         return "Platform(name='$name', type=$type, versions=$versions)"
     }
-    
+
     companion object {
         fun bindSnapshot(snapshot: PlatformSnapshot) = Platform(
             name = snapshot.name,

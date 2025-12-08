@@ -6,9 +6,7 @@ import dev.slne.surf.shulker.proto.group.GroupType
 import dev.slne.surf.shulker.proto.service.ServiceSnapshot
 import dev.slne.surf.shulker.proto.service.ServiceState
 import dev.slne.surf.shulker.proto.service.serviceSnapshot
-import kotlinx.serialization.Serializable
 
-@Serializable
 open class Service(
     val groupName: String,
     val id: Int,

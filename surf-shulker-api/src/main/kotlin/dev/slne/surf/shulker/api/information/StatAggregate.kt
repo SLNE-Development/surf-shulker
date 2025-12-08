@@ -1,8 +1,5 @@
 package dev.slne.surf.shulker.api.information
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class StatAggregate(
     var cpuSum: Double = 0.0,
     var memorySum: Double = 0.0,

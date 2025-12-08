@@ -3,10 +3,8 @@ package dev.slne.surf.shulker.api.player
 import dev.slne.surf.shulker.proto.player.PlayerSnapshot
 import dev.slne.surf.shulker.proto.player.playerSnapshot
 import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
 import java.util.*
 
-@Serializable
 open class ShulkerPlayer(
     val uuid: @Contextual UUID,
     val name: String,

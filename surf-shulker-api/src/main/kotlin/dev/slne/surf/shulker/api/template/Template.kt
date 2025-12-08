@@ -2,11 +2,9 @@ package dev.slne.surf.shulker.api.template
 
 import dev.slne.surf.shulker.proto.template.TemplateSnapshot
 import dev.slne.surf.shulker.proto.template.templateSnapshot
-import kotlinx.serialization.Serializable
 import kotlin.math.log10
 import kotlin.math.pow
 
-@Serializable
 open class Template(
     val name: String,
     private val size: String = "unknown"
