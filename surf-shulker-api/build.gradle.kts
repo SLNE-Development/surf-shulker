@@ -5,4 +5,5 @@ plugins {
 
 dependencies {
     api(project(":surf-shulker-spring"))
+    api(project(":surf-shulker-proto"))
 }

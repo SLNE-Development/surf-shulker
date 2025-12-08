@@ -9,11 +9,11 @@ plugins {
 
 val libs = the<LibrariesForLibs>()
 dependencies {
-    implementation(libs.grpc.stub)
-    implementation(libs.grpc.protobuf)
-    implementation(libs.protobuf.java.util)
-    implementation(libs.protobuf.kotlin)
-    implementation(libs.grpc.kotlin.stub)
+    compileOnlyApi(libs.grpc.stub)
+    compileOnlyApi(libs.grpc.protobuf)
+    compileOnlyApi(libs.protobuf.java.util)
+    compileOnlyApi(libs.protobuf.kotlin)
+    compileOnlyApi(libs.grpc.kotlin.stub)
 }
 
 extensions.configure<ProtobufExtension> {

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_package = "dev.slne.surf.shulker.proto.template";
+option java_multiple_files = true;
+
+service TemplateController {
+  rpc findByName (FindTemplateByNameRequest) returns (TemplateResult);
+}
+
+message FindTemplateByNameRequest {
+  string name = 1;
+}
+
+message TemplateResult {
+  repeated TemplateSnapshot templates = 1;
+}
+
+message TemplateSnapshot {
+  string name = 1;
+  string size = 2;
+}

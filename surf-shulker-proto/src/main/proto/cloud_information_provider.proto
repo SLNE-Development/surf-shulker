@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option java_package = "dev.slne.surf.shulker.proto.cloudinformation";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+service CloudInformationController {
+  rpc find(FindCloudInformationRequest) returns (FindCloudInformationResponse);
+  rpc findAll(FindAllCloudInformationRequest) returns (FindCloudInformationResponse);
+  rpc findMinutes(AggregatedFindCloudInformationRequest) returns (FindCloudInformationAggregatedResponse);
+  rpc findHours(AggregatedFindCloudInformationRequest) returns (FindCloudInformationAggregatedResponse);
+  rpc findDays(AggregatedFindCloudInformationRequest) returns (FindCloudInformationAggregatedResponse);
+  rpc findAveraged(AggregatedFindCloudInformationRequest) returns (FindCloudInformationAggregatedResponse);
+  rpc cleanup(CleanupCloudInformationRequest) returns (google.protobuf.Empty);
+}
+
+message FindCloudInformationRequest {
+  optional string since_timestamp = 1;
+  optional string until_timestamp = 2;
+}
+
+message FindCloudInformationResponse {
+  repeated CloudInformationSnapshot information = 1;
+}
+
+message FindAllCloudInformationRequest {}
+
+message AggregatedFindCloudInformationRequest {
+  optional string from = 1;
+  optional string to = 2;
+}
+
+message FindCloudInformationAggregatedResponse {
+  repeated AggregatedCloudInformationSnapshot information = 1;
+}
+
+message CleanupCloudInformationRequest {
+  int64 max_age_milliseconds = 1;
+}
+
+message CloudInformationSnapshot {
+  string started_at = 1;
+  string runtime = 2;
+  string java_version = 3;
+  double cpu_usage = 4;
+  double memory_usage = 5;
+  double max_memory = 6;
+  int32 subscribed_events = 7;
+  string timestamp = 8;
+}
+
+message AggregatedCloudInformationSnapshot {
+  string timestamp = 1;
+  double avg_cpu_usage = 2;
+  double avg_memory_usage = 3;
+}

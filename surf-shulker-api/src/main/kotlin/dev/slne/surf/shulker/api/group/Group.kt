@@ -1,0 +1,104 @@
+package dev.slne.surf.shulker.api.group
+
+import dev.slne.surf.shulker.api.platform.PlatformIndex
+import dev.slne.surf.shulker.api.template.Template
+import dev.slne.surf.shulker.proto.group.GroupSnapshot
+import dev.slne.surf.shulker.proto.group.groupSnapshot
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+import java.time.OffsetDateTime
+
+@Serializable
+open class Group(
+    val name: String,
+    private val _minMemory: Int,
+    private val _maxMemory: Int,
+    private val _minOnlineServices: Int,
+    private val _maxOnlineServices: Int,
+    val platform: PlatformIndex,
+    private val _percentageToStartNewService: Double,
+    val createdAt: @Contextual OffsetDateTime,
+    val templates: List<Template>,
+    val properties: Map<String, String>
+) {
+    var minMemory: Int = _minMemory
+        protected set
+
+    var maxMemory: Int = _maxMemory
+        protected set
+
+    var minOnlineServices: Int = _minOnlineServices
+        protected set
+
+    var maxOnlineServices: Int = _maxOnlineServices
+        protected set
+
+    var percentageToStartNewService: Double = _percentageToStartNewService
+        protected set
+
+    fun toSnapshot() = groupSnapshot {
+        this.name = this@Group.name
+        this.minimumMemory = this@Group.minMemory
+        this.maximumMemory = this@Group.maxMemory
+        this.minimumOnline = this@Group.minOnlineServices
+        this.maximumOnline = this@Group.maxOnlineServices
+        this.platform = this@Group.platform.toSnapshot()
+        this.percentageToNewService = this@Group.percentageToStartNewService
+        this.createdAt = this@Group.createdAt.toString()
+        this.templates.addAll(this@Group.templates.map { it.toSnapshot() })
+        this.properties.putAll(this@Group.properties)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Group
+
+        if (minMemory != other.minMemory) return false
+        if (maxMemory != other.maxMemory) return false
+        if (minOnlineServices != other.minOnlineServices) return false
+        if (maxOnlineServices != other.maxOnlineServices) return false
+        if (percentageToStartNewService != other.percentageToStartNewService) return false
+        if (name != other.name) return false
+        if (platform != other.platform) return false
+        if (createdAt != other.createdAt) return false
+        if (templates != other.templates) return false
+        if (properties != other.properties) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = minMemory
+        result = 31 * result + maxMemory
+        result = 31 * result + minOnlineServices
+        result = 31 * result + maxOnlineServices
+        result = 31 * result + percentageToStartNewService.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + platform.hashCode()
+        result = 31 * result + createdAt.hashCode()
+        result = 31 * result + templates.hashCode()
+        result = 31 * result + properties.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "Group(minMemory=$minMemory, maxMemory=$maxMemory, minOnlineServices=$minOnlineServices, maxOnlineServices=$maxOnlineServices, percentageToStartNewService=$percentageToStartNewService, properties=$properties, templates=$templates, createdAt=$createdAt, platform=$platform, name='$name')"
+    }
+
+    companion object {
+        fun fromSnapshot(snapshot: GroupSnapshot) = Group(
+            name = snapshot.name,
+            _minMemory = snapshot.minimumMemory,
+            _maxMemory = snapshot.maximumMemory,
+            _minOnlineServices = snapshot.minimumOnline,
+            _maxOnlineServices = snapshot.maximumOnline,
+            platform = PlatformIndex.fromSnapshot(snapshot.platform),
+            _percentageToStartNewService = snapshot.percentageToNewService,
+            createdAt = OffsetDateTime.parse(snapshot.createdAt),
+            templates = snapshot.templatesList.map { Template.fromSnapshot(it) },
+            properties = snapshot.propertiesMap
+        )
+    }
+}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_package = "dev.slne.surf.shulker.proto.player";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+service PlayerController {
+  rpc findAll(google.protobuf.Empty) returns (FindPlayerResponse);
+  rpc findByName(FindPlayerByNameRequest) returns (FindPlayerResponse);
+  rpc findByService(FindPlayerByServiceRequest) returns (FindPlayerResponse);
+  rpc count(PlayerCountRequest) returns (PlayerCountResponse);
+}
+
+message FindPlayerByNameRequest {
+  string name = 1;
+}
+
+message FindPlayerByServiceRequest {
+  string service_name = 1;
+}
+
+message PlayerSnapshot {
+  string unique_id = 1;
+  string name = 2;
+  string current_service_name = 3;
+}
+
+message FindPlayerResponse {
+  repeated PlayerSnapshot players = 1;
+}
+
+message PlayerCountRequest {
+  string service_name = 1;
+}
+
+message PlayerCountResponse {
+  int32 count = 1;
+}

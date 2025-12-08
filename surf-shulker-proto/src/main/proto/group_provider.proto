@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option java_package = "dev.slne.surf.shulker.proto.group";
+option java_multiple_files = true;
+
+import "template_provider.proto";
+
+service GroupController {
+  rpc find(FindGroupRequest) returns (FindGroupResponse);
+  rpc create(GroupSnapshot) returns (GroupSnapshot);
+  rpc update(GroupSnapshot) returns (GroupSnapshot);
+  rpc delete(GroupDeleteRequest) returns (GroupSnapshot);
+}
+
+message FindGroupResponse {
+  repeated GroupSnapshot groups = 1;
+}
+
+message GroupSnapshot {
+  string name = 1;
+  GroupType type = 2;
+  GroupPlatformSnapshot platform = 3;
+  uint32 minimum_memory = 4;
+  uint32 maximum_memory = 5;
+  uint32 minimum_online = 6;
+  uint32 maximum_online = 7;
+  double percentage_to_new_service = 8;
+  repeated TemplateSnapshot templates = 9;
+  map<string, string> properties = 10;
+  string created_at = 11;
+}
+
+message FindGroupRequest {
+  string name = 1;
+  GroupType type = 2;
+}
+
+message GroupDeleteRequest {
+  string name = 1;
+}
+
+message GroupPlatformSnapshot {
+  string name = 1;
+  string version = 2;
+}
+
+enum GroupType {
+  SERVICE = 0;
+  SERVER = 1;
+  PROXY = 2;
+}
