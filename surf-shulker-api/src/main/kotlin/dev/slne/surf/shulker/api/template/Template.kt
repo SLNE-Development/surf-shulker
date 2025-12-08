@@ -53,5 +53,8 @@ open class Template(
             name = snapshot.name,
             size = snapshot.size
         )
+
+        fun fromSnapshotList(snapshots: Collection<TemplateSnapshot>) =
+            snapshots.map { fromSnapshot(it) }
     }
 }

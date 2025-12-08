@@ -15,7 +15,7 @@ open class Group(
     private val _maxMemory: Int,
     private val _minOnlineServices: Int,
     private val _maxOnlineServices: Int,
-    val platform: PlatformIndex,
+    val platformIndex: PlatformIndex,
     private val _percentageToStartNewService: Double,
     val createdAt: @Contextual OffsetDateTime,
     val templates: List<Template>,
@@ -42,7 +42,7 @@ open class Group(
         this.maximumMemory = this@Group.maxMemory
         this.minimumOnline = this@Group.minOnlineServices
         this.maximumOnline = this@Group.maxOnlineServices
-        this.platform = this@Group.platform.toSnapshot()
+        this.platform = this@Group.platformIndex.toSnapshot()
         this.percentageToNewService = this@Group.percentageToStartNewService
         this.createdAt = this@Group.createdAt.toString()
         this.templates.addAll(this@Group.templates.map { it.toSnapshot() })
@@ -61,7 +61,7 @@ open class Group(
         if (maxOnlineServices != other.maxOnlineServices) return false
         if (percentageToStartNewService != other.percentageToStartNewService) return false
         if (name != other.name) return false
-        if (platform != other.platform) return false
+        if (platformIndex != other.platformIndex) return false
         if (createdAt != other.createdAt) return false
         if (templates != other.templates) return false
         if (properties != other.properties) return false
@@ -76,7 +76,7 @@ open class Group(
         result = 31 * result + maxOnlineServices
         result = 31 * result + percentageToStartNewService.hashCode()
         result = 31 * result + name.hashCode()
-        result = 31 * result + platform.hashCode()
+        result = 31 * result + platformIndex.hashCode()
         result = 31 * result + createdAt.hashCode()
         result = 31 * result + templates.hashCode()
         result = 31 * result + properties.hashCode()
@@ -84,7 +84,7 @@ open class Group(
     }
 
     override fun toString(): String {
-        return "Group(minMemory=$minMemory, maxMemory=$maxMemory, minOnlineServices=$minOnlineServices, maxOnlineServices=$maxOnlineServices, percentageToStartNewService=$percentageToStartNewService, properties=$properties, templates=$templates, createdAt=$createdAt, platform=$platform, name='$name')"
+        return "Group(minMemory=$minMemory, maxMemory=$maxMemory, minOnlineServices=$minOnlineServices, maxOnlineServices=$maxOnlineServices, percentageToStartNewService=$percentageToStartNewService, properties=$properties, templates=$templates, createdAt=$createdAt, platform=$platformIndex, name='$name')"
     }
 
     companion object {
@@ -94,7 +94,7 @@ open class Group(
             _maxMemory = snapshot.maximumMemory,
             _minOnlineServices = snapshot.minimumOnline,
             _maxOnlineServices = snapshot.maximumOnline,
-            platform = PlatformIndex.fromSnapshot(snapshot.platform),
+            platformIndex = PlatformIndex.fromSnapshot(snapshot.platform),
             _percentageToStartNewService = snapshot.percentageToNewService,
             createdAt = OffsetDateTime.parse(snapshot.createdAt),
             templates = snapshot.templatesList.map { Template.fromSnapshot(it) },

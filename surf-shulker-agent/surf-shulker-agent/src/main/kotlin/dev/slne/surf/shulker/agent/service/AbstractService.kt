@@ -1,4 +1,6 @@
 package dev.slne.surf.shulker.agent.service
 
-abstract class AbstractService {
+import dev.slne.surf.shulker.api.service.Service
+
+abstract class AbstractService : Service {
 }

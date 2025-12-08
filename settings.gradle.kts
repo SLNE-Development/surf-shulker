@@ -10,6 +10,7 @@ val map = mapOf(
 
     // Api
     "surf-shulker-api" to "surf-shulker-api",
+    "surf-shulker-common" to "surf-shulker-common",
     "surf-shulker-spring" to "surf-shulker-spring",
 
     // GRPC
