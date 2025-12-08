@@ -12,9 +12,6 @@ val map = mapOf(
     "surf-shulker-api" to "surf-shulker-api",
     "surf-shulker-spring" to "surf-shulker-spring",
 
-    // Controller
-    "surf-shulker-controller" to "surf-shulker-controller",
-
     // GRPC
     "surf-shulker-proto" to "surf-shulker-proto",
     "surf-shulker-grpc:surf-shulker-grpc-common" to "surf-shulker-grpc-common",
