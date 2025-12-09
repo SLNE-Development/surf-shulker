@@ -4,7 +4,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":surf-shulker-spring"))
     api(project(":surf-shulker-proto"))
+    api(project(":surf-shulker-runtime:surf-shulker-runtime-common"))
+
     api(libs.kaml)
 }

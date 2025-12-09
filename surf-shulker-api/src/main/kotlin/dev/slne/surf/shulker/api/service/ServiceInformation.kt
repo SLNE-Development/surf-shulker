@@ -1,5 +1,6 @@
 package dev.slne.surf.shulker.api.service
 
+import com.google.gson.Gson
 import dev.slne.surf.shulker.proto.service.ServiceInformationSnapshot
 import dev.slne.surf.shulker.proto.service.serviceInformationSnapshot
 import kotlinx.serialization.Contextual
@@ -30,6 +31,11 @@ data class ServiceInformation(
     }
 
     companion object {
+        private val gson = Gson()
+
+        fun fromJson(json: String): ServiceInformation =
+            gson.fromJson(json, ServiceInformation::class.java)
+
         fun fromSnapshot(snapshot: ServiceInformationSnapshot) = ServiceInformation(
             createdAt = OffsetDateTime.parse(snapshot.createdAt)
         )

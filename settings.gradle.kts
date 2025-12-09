@@ -10,7 +10,8 @@ val map = mapOf(
 
     // Api
     "surf-shulker-api" to "surf-shulker-api",
-    "surf-shulker-common" to "surf-shulker-common",
+    "surf-shulker-core" to "surf-shulker-core",
+    "surf-shulker-platform" to "surf-shulker-platform",
     "surf-shulker-spring" to "surf-shulker-spring",
 
     // GRPC
@@ -21,17 +22,13 @@ val map = mapOf(
 
     // Runtime
     "surf-shulker-runtime:surf-shulker-runtime-common" to "surf-shulker-runtime-common",
-    "surf-shulker-runtime:surf-shulker-runtime-paper" to "surf-shulker-runtime-paper",
-    "surf-shulker-runtime:surf-shulker-runtime-velocity" to "surf-shulker-runtime-velocity",
+    "surf-shulker-runtime:surf-shulker-runtime-local" to "surf-shulker-runtime-local",
+    "surf-shulker-runtime:surf-shulker-runtime-docker" to "surf-shulker-runtime-docker",
+    "surf-shulker-runtime:surf-shulker-runtime-kubernetes" to "surf-shulker-runtime-kubernetes",
 
     // Agent
     "surf-shulker-agent:surf-shulker-agent" to "surf-shulker-agent",
     "surf-shulker-agent:surf-shulker-agent-launcher" to "surf-shulker-agent-launcher",
-
-    // Node
-    "surf-shulker-node:surf-shulker-node-common" to "surf-shulker-node-common",
-    "surf-shulker-node:surf-shulker-node-registry" to "surf-shulker-node-registry",
-    "surf-shulker-node:surf-shulker-node-docker" to "surf-shulker-node-docker",
 )
 
 map.forEach { (project, name) ->

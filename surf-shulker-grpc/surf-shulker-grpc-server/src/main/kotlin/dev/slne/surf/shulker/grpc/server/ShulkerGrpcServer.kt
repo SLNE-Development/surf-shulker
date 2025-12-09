@@ -8,7 +8,7 @@ import io.grpc.InsecureServerCredentials
 import io.grpc.Server
 import java.util.concurrent.TimeUnit
 
-class ShulkerGrpcServer(
+open class ShulkerGrpcServer(
     config: GrpcServerConfig,
     services: List<BindableService>
 ) {

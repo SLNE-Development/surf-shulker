@@ -5,6 +5,10 @@ option java_multiple_files = true;
 
 import "group_provider.proto";
 
+service PlatformController {
+  rpc find(FindPlatformRequest) returns (FindPlatformResponse);
+}
+
 message FindPlatformRequest {
   optional string name = 1;
   optional GroupType type = 2;

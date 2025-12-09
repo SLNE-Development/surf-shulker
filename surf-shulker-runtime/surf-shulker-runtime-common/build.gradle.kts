@@ -3,9 +3,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":surf-shulker-proto"))
-    api(project(":surf-shulker-common"))
-    api(project(":surf-shulker-spring"))
+    api(project(":surf-shulker-core"))
 
     api(libs.tomlj)
 }

@@ -14,6 +14,8 @@ interface SharedServiceProvider<S : Service> {
 
     suspend fun findByGroup(group: Group): ObjectList<S>
 
+    suspend fun findByGroupName(groupName: String): ObjectList<S>
+
     suspend fun bootInstanceWithConfiguration(
         name: String,
         configuration: SharedBootConfig

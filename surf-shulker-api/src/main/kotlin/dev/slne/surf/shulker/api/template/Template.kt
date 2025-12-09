@@ -7,7 +7,7 @@ import kotlin.math.pow
 
 open class Template(
     val name: String,
-    private val size: String = "unknown"
+    open val size: String = "unknown"
 ) {
     fun toSnapshot() = templateSnapshot {
         this.name = this@Template.name

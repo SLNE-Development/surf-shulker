@@ -5,8 +5,8 @@ option java_multiple_files = true;
 
 service EventController {
   rpc subscribe(SubscribeEventRequest) returns (stream EventContext);
-  rpc callEvent(EventContext) returns (CallEventResponse);
   rpc unsubscribe(SubscribeEventRequest) returns (UnsubscribeEventResponse);
+  rpc callEvent(EventContext) returns (CallEventResponse);
 }
 
 message SubscribeEventRequest {
@@ -15,8 +15,9 @@ message SubscribeEventRequest {
 }
 
 message EventContext {
-  string event_name = 1;
-  string event_data = 2;
+  string event_fqcn = 1;
+  string event_name = 2;
+  string event_data = 3;
 }
 
 message CallEventResponse {
@@ -26,4 +27,5 @@ message CallEventResponse {
 
 message UnsubscribeEventResponse {
   bool success = 1;
+  string message = 2;
 }

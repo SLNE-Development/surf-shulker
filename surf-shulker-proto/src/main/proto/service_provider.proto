@@ -6,6 +6,13 @@ option java_multiple_files = true;
 import "group_provider.proto";
 import "template_provider.proto";
 
+service ServiceController {
+  rpc find(ServiceFindRequest) returns (ServiceFindResponse);
+  rpc boot(ServiceBootRequest) returns (ServiceSnapshot);
+  rpc bootWithConfiguration(ServiceBootWithConfigurationRequest) returns (ServiceSnapshot);
+  rpc shutdown(ServiceShutdownRequest) returns (ServiceShutdownResponse);
+}
+
 message ServiceFindRequest {
   optional string name = 1;
   optional string group_name = 2;
@@ -27,6 +34,14 @@ message ServiceBootWithConfigurationRequest {
   repeated TemplateSnapshot templates = 4;
   repeated TemplateSnapshot excluded_templates = 5;
   map<string, string> properties = 6;
+}
+
+message ServiceShutdownRequest {
+  string name = 1;
+}
+
+message ServiceShutdownResponse {
+  ServiceSnapshot service = 1;
 }
 
 message ServiceSnapshot {

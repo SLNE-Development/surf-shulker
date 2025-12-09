@@ -3,6 +3,7 @@ package dev.slne.surf.shulker.agent.group
 import dev.slne.surf.shulker.agent.Agent
 import dev.slne.surf.shulker.api.platform.PlatformIndex
 import dev.slne.surf.shulker.api.template.Template
+import dev.slne.surf.shulker.core.group.AbstractGroup
 import dev.slne.surf.shulker.proto.group.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
