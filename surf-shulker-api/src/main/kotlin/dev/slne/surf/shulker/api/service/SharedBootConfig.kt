@@ -1,11 +1,13 @@
 package dev.slne.surf.shulker.api.service
 
 import dev.slne.surf.shulker.api.template.Template
+import kotlinx.serialization.Serializable
 
 fun sharedBootConfig(
     block: SharedBootConfig.() -> Unit
 ) = SharedBootConfig().apply(block)
 
+@Serializable
 class SharedBootConfig {
     var minMemory: Int? = null
     var maxMemory: Int? = null

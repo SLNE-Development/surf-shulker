@@ -1,4 +1,6 @@
 package dev.slne.surf.shulker.api.event
 
-interface Event {
-}
+import kotlinx.serialization.Polymorphic
+
+@Polymorphic
+interface Event

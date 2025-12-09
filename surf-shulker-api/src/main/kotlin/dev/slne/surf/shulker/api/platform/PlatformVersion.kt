@@ -2,7 +2,9 @@ package dev.slne.surf.shulker.api.platform
 
 import dev.slne.surf.shulker.proto.platform.PlatformVersionSnapshot
 import dev.slne.surf.shulker.proto.platform.platformVersionSnapshot
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PlatformVersion(
     val version: String
 ) {

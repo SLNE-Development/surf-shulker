@@ -4,8 +4,10 @@ import com.google.gson.Gson
 import dev.slne.surf.shulker.proto.service.ServiceInformationSnapshot
 import dev.slne.surf.shulker.proto.service.serviceInformationSnapshot
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
+@Serializable
 data class ServiceInformation(
     val createdAt: @Contextual OffsetDateTime
 ) {

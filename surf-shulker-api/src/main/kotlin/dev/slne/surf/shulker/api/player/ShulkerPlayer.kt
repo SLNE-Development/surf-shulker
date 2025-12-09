@@ -3,8 +3,10 @@ package dev.slne.surf.shulker.api.player
 import dev.slne.surf.shulker.proto.player.PlayerSnapshot
 import dev.slne.surf.shulker.proto.player.playerSnapshot
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.util.*
 
+@Serializable
 open class ShulkerPlayer(
     val uuid: @Contextual UUID,
     val name: String,
@@ -13,7 +15,7 @@ open class ShulkerPlayer(
     val uniqueId get() = uuid.toString()
 
     fun toSnapshot() = playerSnapshot {
-        uniqueId = uuid.toString()
+        this.uniqueId = uuid.toString()
         this.name = name
         this.currentServiceName = currentServiceName
     }
@@ -43,7 +45,7 @@ open class ShulkerPlayer(
     }
 
     companion object {
-        fun bindSnapshot(snapshot: PlayerSnapshot) = ShulkerPlayer(
+        fun fromSnapshot(snapshot: PlayerSnapshot) = ShulkerPlayer(
             uuid = UUID.fromString(snapshot.uniqueId),
             name = snapshot.name,
             currentServiceName = snapshot.currentServiceName,

@@ -1,12 +1,15 @@
 package dev.slne.surf.shulker.api.service
 
 import dev.slne.surf.shulker.api.ShulkerApi
+import dev.slne.surf.shulker.api.service.events.ServiceChangePlayerCountEvent
 import dev.slne.surf.shulker.api.template.Template
 import dev.slne.surf.shulker.proto.group.GroupType
 import dev.slne.surf.shulker.proto.service.ServiceSnapshot
 import dev.slne.surf.shulker.proto.service.ServiceState
 import dev.slne.surf.shulker.proto.service.serviceSnapshot
+import kotlinx.serialization.Serializable
 
+@Serializable
 open class Service(
     val groupName: String,
     val id: Int,
@@ -17,34 +20,45 @@ open class Service(
     val port: Int,
     var templates: List<Template>,
     val information: ServiceInformation,
-    private var _minMemory: Int,
-    private var _maxMemory: Int,
-    private var _playerCount: Int = -1,
-    private var _maxPlayerCount: Int = -1,
-    private var _memoryUsage: Double = -1.0,
-    private var _cpuUsage: Double = -1.0,
-    private var _motd: String = "",
 ) {
-    var minMemory = _minMemory
-        protected set
+    var minMemory = 0
+        set(value) {
+            if (state == ServiceState.STARTING || state == ServiceState.ONLINE) {
+                throw IllegalStateException("Cannot update minMemory while service is starting or online.")
+            }
 
-    var maxMemory = _maxMemory
-        protected set
+            field = value
+        }
 
-    var playerCount = _playerCount
-        protected set
+    var maxMemory = 0
+        set(value) {
+            if (state == ServiceState.STARTING || state == ServiceState.ONLINE) {
+                throw IllegalStateException("Cannot update maxMemory while service is starting or online.")
+            }
 
-    var maxPlayerCount = _maxPlayerCount
-        protected set
+            field = value
+        }
 
-    var memoryUsage = _memoryUsage
-        protected set
+    var playerCount = 0
+        set(value) {
+            val oldPlayerCount = this.playerCount
+            field = value
 
-    var cpuUsage = _cpuUsage
-        protected set
+            if (this.state == ServiceState.ONLINE && oldPlayerCount != value) {
+                val event = ServiceChangePlayerCountEvent(
+                    service = this,
+                    previousCount = oldPlayerCount,
+                    newCount = value
+                )
 
-    var motd = _motd
-        protected set
+                ShulkerApi.eventProvider.call(event)
+            }
+        }
+
+    var maxPlayerCount: Int = -1
+    var memoryUsage: Double = -1.0
+    var cpuUsage: Double = -1.0
+    var motd: String = ""
 
     var hostname = _hostname
         protected set
@@ -139,13 +153,14 @@ open class Service(
             port = snapshot.port,
             templates = snapshot.templatesList.map { Template.fromSnapshot(it) },
             information = ServiceInformation.fromSnapshot(snapshot.information),
-            _minMemory = snapshot.minimumMemory,
-            _maxMemory = snapshot.maximumMemory,
-            _playerCount = snapshot.playerCount,
-            _maxPlayerCount = snapshot.maxPlayerCount,
-            _memoryUsage = snapshot.memoryUsage,
-            _cpuUsage = snapshot.cpuUsage,
-            _motd = snapshot.motd,
-        )
+        ).apply {
+            minMemory = snapshot.minimumMemory
+            maxMemory = snapshot.maximumMemory
+            playerCount = snapshot.playerCount
+            maxPlayerCount = snapshot.maxPlayerCount
+            memoryUsage = snapshot.memoryUsage
+            cpuUsage = snapshot.cpuUsage
+            motd = snapshot.motd
+        }
     }
 }

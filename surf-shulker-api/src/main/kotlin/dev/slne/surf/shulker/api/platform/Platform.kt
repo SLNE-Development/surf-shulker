@@ -4,7 +4,9 @@ import dev.slne.surf.shulker.proto.group.GroupType
 import dev.slne.surf.shulker.proto.platform.PlatformSnapshot
 import dev.slne.surf.shulker.proto.platform.platformSnapshot
 import dev.slne.surf.surfapi.core.api.util.mutableObjectListOf
+import kotlinx.serialization.Serializable
 
+@Serializable
 open class Platform(
     val name: String,
     val type: GroupType,

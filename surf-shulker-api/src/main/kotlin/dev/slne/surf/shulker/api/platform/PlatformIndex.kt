@@ -2,7 +2,9 @@ package dev.slne.surf.shulker.api.platform
 
 import dev.slne.surf.shulker.proto.group.GroupPlatformSnapshot
 import dev.slne.surf.shulker.proto.group.groupPlatformSnapshot
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PlatformIndex(
     val name: String,
     val version: String

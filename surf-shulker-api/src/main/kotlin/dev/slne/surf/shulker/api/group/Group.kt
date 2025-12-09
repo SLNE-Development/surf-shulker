@@ -1,17 +1,14 @@
 package dev.slne.surf.shulker.api.group
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
-import dev.slne.surf.shulker.api.ShulkerKeys
 import dev.slne.surf.shulker.api.platform.PlatformIndex
-import dev.slne.surf.shulker.api.property.PropertyHolder
 import dev.slne.surf.shulker.api.template.Template
 import dev.slne.surf.shulker.proto.group.GroupSnapshot
 import dev.slne.surf.shulker.proto.group.groupSnapshot
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
+@Serializable
 open class Group(
     val name: String,
     private val _minMemory: Int,
@@ -22,7 +19,7 @@ open class Group(
     private val _percentageToStartNewService: Double,
     val createdAt: @Contextual OffsetDateTime,
     val templates: List<Template>,
-    val properties: PropertyHolder
+    val properties: Map<String, String>
 ) {
     var minMemory: Int = _minMemory
         protected set
@@ -49,7 +46,7 @@ open class Group(
         this.percentageToNewService = this@Group.percentageToStartNewService
         this.createdAt = this@Group.createdAt.toString()
         this.templates.addAll(this@Group.templates.map { it.toSnapshot() })
-        this.properties.putAll(this@Group.properties.all().mapValues { it.value.toString() })
+        this.properties.putAll(this@Group.properties)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -101,45 +98,7 @@ open class Group(
             _percentageToStartNewService = snapshot.percentageToNewService,
             createdAt = OffsetDateTime.parse(snapshot.createdAt),
             templates = snapshot.templatesList.map { Template.fromSnapshot(it) },
-            properties = snapshot.propertiesMap.run {
-                val propertyHolder = PropertyHolder.empty()
-
-                forEach { (key, value) ->
-                    val primitive = when {
-                        value.lowercase()
-                            .toBooleanStrictOrNull() != null -> JsonPrimitive(value.toBoolean())
-
-                        value.toIntOrNull() != null -> JsonPrimitive(value.toInt())
-                        value.toDoubleOrNull() != null -> JsonPrimitive(value.toDouble())
-                        value.toFloatOrNull() != null -> JsonPrimitive(value.toFloat())
-                        else -> JsonPrimitive(value)
-                    }
-
-                    propertyHolder.raw(key, primitive)
-                }
-
-                return@run propertyHolder
-            }
+            properties = snapshot.propertiesMap
         )
     }
-}
-
-fun Group.toJson() = JsonObject().apply {
-    addProperty(ShulkerKeys.NAME, name)
-    addProperty(ShulkerKeys.MIN_MEMORY, minMemory)
-    addProperty(ShulkerKeys.MAX_MEMORY, maxMemory)
-    addProperty(ShulkerKeys.MIN_ONLINE, minOnlineServices)
-    addProperty(ShulkerKeys.MAX_ONLINE, maxOnlineServices)
-    addProperty(ShulkerKeys.START_THRESHOLD, percentageToStartNewService)
-    addProperty(ShulkerKeys.CREATED_AT, createdAt.toString())
-    add(ShulkerKeys.PLATFORM, JsonObject().apply {
-        addProperty(ShulkerKeys.NAME, platformIndex.name)
-        addProperty(ShulkerKeys.VERSION, platformIndex.version)
-    })
-    add(ShulkerKeys.TEMPLATES, JsonArray().apply {
-        templates.forEach { add(it.name) }
-    })
-    add(ShulkerKeys.PROPERTIES, JsonObject().apply {
-        properties.all().forEach { (key, value) -> add(key, value) }
-    })
 }

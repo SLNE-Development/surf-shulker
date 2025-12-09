@@ -3,8 +3,10 @@ package dev.slne.surf.shulker.api.information
 import dev.slne.surf.shulker.proto.cloudinformation.CloudInformationSnapshot
 import dev.slne.surf.shulker.proto.cloudinformation.cloudInformationSnapshot
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.time.OffsetDateTime
 
+@Serializable
 open class CloudInformation(
     val started: @Contextual OffsetDateTime,
     val runtime: String,
