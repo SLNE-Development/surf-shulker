@@ -1,6 +1,5 @@
 package dev.slne.surf.shulker.spring
 
-import jdk.jfr.Enabled
 import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration

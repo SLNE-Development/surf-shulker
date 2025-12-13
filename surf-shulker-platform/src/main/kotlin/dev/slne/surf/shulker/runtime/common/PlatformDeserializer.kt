@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
-import dev.slne.surf.shulker.common.os.OS
+import dev.slne.surf.shulker.api.utils.os.OS
 import dev.slne.surf.shulker.proto.group.GroupType
 import dev.slne.surf.shulker.runtime.common.bridge.Bridge
 import java.lang.reflect.Type

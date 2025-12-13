@@ -5,7 +5,6 @@ import dev.slne.surf.shulker.agent.information.CloudInformationStorageImpl
 import dev.slne.surf.shulker.agent.module.ModuleProvider
 import dev.slne.surf.shulker.agent.platform.PlatformStorageImpl
 import dev.slne.surf.shulker.agent.player.PlayerStorageImpl
-import dev.slne.surf.shulker.runtime.common.Runtime
 import dev.slne.surf.shulker.agent.security.SecurityProvider
 import dev.slne.surf.shulker.api.ShulkerApi
 import dev.slne.surf.shulker.api.group.SharedGroupProvider
@@ -13,6 +12,7 @@ import dev.slne.surf.shulker.api.information.SharedCloudInformationProvider
 import dev.slne.surf.shulker.api.platform.SharedPlatformProvider
 import dev.slne.surf.shulker.api.service.SharedServiceProvider
 import dev.slne.surf.shulker.api.template.SharedTemplateProvider
+import dev.slne.surf.shulker.runtime.common.Runtime
 import dev.slne.surf.surfapi.core.api.util.logger
 
 
@@ -36,8 +36,7 @@ object Agent : ShulkerApi {
 
     fun init() {
         log.atInfo().log(
-        checkForUpdates()
-
-        runtime.init()
+            runtime.init()
+        )
     }
 }

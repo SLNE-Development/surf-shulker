@@ -1,6 +1,6 @@
 package dev.slne.surf.shulker.runtime.common.task.action.actions
 
-import dev.slne.surf.shulker.common.os.currentOs
+import dev.slne.surf.shulker.api.utils.os.currentOs
 import dev.slne.surf.shulker.runtime.common.PlatformParameters
 import dev.slne.surf.shulker.runtime.common.task.PlatformTaskStep
 import dev.slne.surf.shulker.runtime.common.task.action.PlatformAction

@@ -1,6 +1,6 @@
 package dev.slne.surf.shulker.runtime.common.bridge
 
-import dev.slne.surf.shulker.common.config.readYml
+import dev.slne.surf.shulker.api.utils.config.readYml
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URI

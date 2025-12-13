@@ -29,9 +29,14 @@ val map = mapOf(
     // Agent
     "surf-shulker-agent:surf-shulker-agent" to "surf-shulker-agent",
     "surf-shulker-agent:surf-shulker-agent-launcher" to "surf-shulker-agent-launcher",
+
+    // Bridge
+
+    "surf-shulker-bridge:surf-shulker-bridge-api" to "surf-shulker-bridge-api"
 )
 
 map.forEach { (project, name) ->
     include(project)
     project(":$project").name = name
 }
+include("surf-shulker-bridge:surf-shulker-bridge-velocity")
