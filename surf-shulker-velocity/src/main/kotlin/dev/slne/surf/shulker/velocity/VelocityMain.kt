@@ -16,6 +16,7 @@ class VelocityMain @Inject constructor(
     @DataDirectory val dataPath: Path,
 ) {
     init {
+        INSTANCE = this
         suspendingContainer.initialize(this)
     }
 
@@ -23,4 +24,13 @@ class VelocityMain @Inject constructor(
     suspend fun onProxyInitialize(event: ProxyInitializeEvent) {
         proxy.consoleCommandSource.sendPlainMessage("surf-shulker enabled")
     }
+
+    companion object {
+        lateinit var INSTANCE: VelocityMain
+            private set
+    }
 }
+
+val plugin get() = VelocityMain.INSTANCE
+val proxy get() = plugin.proxy
+val container get() = plugin.container

@@ -3,7 +3,6 @@ plugins {
 }
 
 surfVelocityApi {
-    mainClass("dev.slne.surf.shulker.paper.PaperMain")
     withCoreVelocity()
     withSurfRedis()
 }
