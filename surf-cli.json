@@ -1,0 +1,100 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SLNE-Development/surf-cli/master/schema/surf-cli.schema.json",
+  "schemaVersion": 1,
+  "name": "surf-shulker",
+  "group": "dev.slne.surf.shulker",
+  "description": "Surf Shulker",
+  "archetype": "multi-module-plugin",
+  "maintainers": [
+    "Ammo"
+  ],
+  "lifecycle": "active",
+  "modules": [
+    {
+      "id": "surf-shulker-api",
+      "kind": "api"
+    },
+    {
+      "id": "surf-shulker-core",
+      "kind": "core"
+    },
+    {
+      "id": "surf-shulker-api-client",
+      "kind": "api"
+    },
+    {
+      "id": "surf-shulker-api-common",
+      "kind": "api"
+    },
+    {
+      "id": "surf-shulker-api-client-common",
+      "kind": "api"
+    },
+    {
+      "id": "surf-shulker-core-common",
+      "kind": "core"
+    },
+    {
+      "id": "surf-shulker-api-client-paper",
+      "kind": "api"
+    },
+    {
+      "id": "surf-shulker-api-client-velocity",
+      "kind": "api"
+    },
+    {
+      "id": "surf-shulker-core-client",
+      "kind": "core"
+    },
+    {
+      "id": "surf-shulker-microservice",
+      "kind": "microservice"
+    },
+    {
+      "id": "surf-shulker-core-client-common",
+      "kind": "core"
+    },
+    {
+      "id": "surf-shulker-core-client-paper",
+      "kind": "core"
+    },
+    {
+      "id": "surf-shulker-core-client-velocity",
+      "kind": "core"
+    },
+    {
+      "id": "surf-shulker-minestom",
+      "kind": "minestom"
+    },
+    {
+      "id": "surf-shulker-paper",
+      "kind": "paper"
+    },
+    {
+      "id": "surf-shulker-velocity",
+      "kind": "velocity"
+    }
+  ],
+  "dependencies": {
+    "surf-api": "+",
+    "surf-database-r2dbc": "+",
+    "surf-rabbitmq": "+",
+    "surf-redis": "+"
+  },
+  "runtime": {
+    "microservices": [
+      {
+        "module": "surf-shulker-microservice",
+        "needs": [
+          "rabbitmq",
+          "database",
+          "redis"
+        ],
+        "database": "shulker",
+        "defaultReplicas": 1,
+        "dependsOn": [],
+        "env": {}
+      }
+    ]
+  }
+}
